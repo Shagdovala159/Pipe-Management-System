@@ -7,10 +7,10 @@
             <div class="row align-items-center">
                 <div class="col-sm-12">
                     <div class="page-sub-header">
-                        <h3 class="page-title">Add reports</h3>
+                        <h3 class="page-title">New Reports</h3>
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('report/add/page') }}">Report</a></li>
-                            <li class="breadcrumb-item active">Add Reports</li>
+                            <li class="breadcrumb-item active">New Reports</li>
                         </ul>
                     </div>
                 </div>
