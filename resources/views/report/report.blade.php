@@ -82,7 +82,7 @@
                                         <td>{{ $list->id }}</td>
                                         <td>{{ $list->reporter }}</td>
                                         <td>{{ date('l, d-m-Y', strtotime($list->when)) }}</td>
-                                        <td>{{ $list->reporter }}</td>
+                                        <td>{{ $list->where }}</td>
                                         <td>{{ $list->category}}</td>
                                         @if ($list->status === 'Open')
                                         <td><span class="badge badge-soft-secondary">{{ $list->status }}</span></td>

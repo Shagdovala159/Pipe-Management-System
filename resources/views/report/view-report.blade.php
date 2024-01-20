@@ -7,10 +7,10 @@
             <div class="row align-items-center">
                 <div class="col-sm-12">
                     <div class="page-sub-header">
-                        <h3 class="page-title">View Students</h3>
+                        <h3 class="page-title">View Reports</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{ route('student/add/page') }}">Student</a></li>
-                            <li class="breadcrumb-item active">View Students</li>
+                            <li class="breadcrumb-item"><a href="{{ route('report/add/page') }}">Report</a></li>
+                            <li class="breadcrumb-item active">View Reports</li>
                         </ul>
                     </div>
                 </div>
