@@ -6,15 +6,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.1",
+        "brian2694/laravel-toastr": "^5.57",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
-        "laravel/sanctum": "^3.3",
+        "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
-        "spatie/laravel-permission": "^6.3"
+        "laravel/ui": "^4.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
-        "laravel/breeze": "^1.28",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
         "mockery/mockery": "^1.4.4",
@@ -47,22 +47,6 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ],
-        "clear": [
-            "php artisan cache:clear",
-            "php artisan config:clear",
-            "php artisan view:clear",
-            "php artisan route:clear",
-            "php artisan clear-compiled",
-            "composer dump-autoload"
-        ],
-        "refresh-db": [
-            "rm -fr storage/app/public/*",
-            "mkdir storage/app/public/_thumbs",
-            "mkdir storage/app/public/uploads",
-            "chmod 0777 storage/app/public/_thumbs storage/app/public/uploads",
-            "@php artisan migrate:refresh --seed",
-            "@php artisan storage:link"
         ]
     },
     "extra": {
