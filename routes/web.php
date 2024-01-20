@@ -90,6 +90,7 @@ Route::group(['namespace' => 'App\Http\Controllers'],function()
         Route::post('report/add/save', 'reportSave')->name('report/add/save'); // save record report
         Route::get('report/edit/{id}', 'reportEdit'); // view for edit
         Route::get('report/view/{id}', 'reportView'); // view cant edit
+        Route::get('rreport/exportpdf/{id}', 'exportpdf')->middleware('auth')->name('report.exportpdf'); // report export
         Route::post('report/update', 'reportUpdate')->name('report/update'); // update record report
         Route::post('report/updateview', 'reportUpdateView')->name('report/updateview'); // update record report
         Route::post('report/delete', 'reportDelete')->name('report/delete'); // delete record report

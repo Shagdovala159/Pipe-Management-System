@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\User;
+use PDF;
 class ReportController extends Controller
 {
     /** index page report list */
     public function report()
     {
         $reportList = Report::orderBy('when', 'desc')->get();
-        return view('report.report',compact('reportList'));
+        return view('report.report', compact('reportList'));
     }
 
     /** index page report grid */
     public function reportGrid()
     {
         $reportList = Report::all();
-        return view('report.report-grid',compact('reportList'));
+        return view('report.report-grid', compact('reportList'));
     }
 
     /** report add page */
@@ -28,7 +29,7 @@ class ReportController extends Controller
     {
         return view('report.add-report');
     }
-    
+
     /** report save record */
     public function reportSave(Request $request)
     {
@@ -42,35 +43,34 @@ class ReportController extends Controller
             'how'       => 'required|string',
         ], [
             'when.before_or_equal' => 'The date cannot exceed today.',
-        ]);  
+        ]);
         DB::beginTransaction();
         try {
-           
+
             // $upload_file = rand() . '.' . $request->upload->extension();
             // $request->upload->move(storage_path('app/public/report-photos/'), $upload_file);
             // if(!empty($request->upload)) {
-                $report = new Report;
-                $report->category   = $request->category;
-                $report->reporter    = User::find(auth()->user()->id)->name;
-                $report->when       = $request->when;
-                $report->where      = $request->where;
-                $report->who        = $request->who;
-                $report->what       = $request->what;
-                $report->why        = $request->why;
-                $report->how        = $request->how;
-                $report->status     = 'Open';
-                $report->save();
+            $report = new Report;
+            $report->category   = $request->category;
+            $report->reporter    = User::find(auth()->user()->id)->name;
+            $report->when       = $request->when;
+            $report->where      = $request->where;
+            $report->who        = $request->who;
+            $report->what       = $request->what;
+            $report->why        = $request->why;
+            $report->how        = $request->how;
+            $report->status     = 'Open';
+            $report->save();
 
-                Toastr::success('Has been add successfully :)','Success');
-                DB::commit();
+            Toastr::success('Has been add successfully :)', 'Success');
+            DB::commit();
             // }
             return redirect()->to(
                 route('report/list')
             );
-           
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('fail, Add new report  :)','Error');
+            Toastr::error('fail, Add new report  :)', 'Error');
             return redirect()->back();
         }
     }
@@ -78,15 +78,15 @@ class ReportController extends Controller
     /** view for edit report */
     public function reportEdit($id)
     {
-        $reportEdit = Report::where('id',$id)->first();
-        return view('report.edit-report',compact('reportEdit'));
+        $reportEdit = Report::where('id', $id)->first();
+        return view('report.edit-report', compact('reportEdit'));
     }
-    
+
     /** view for edit report */
     public function reportView($id)
     {
-        $reportView = Report::where('id',$id)->first();
-        return view('report.view-report',compact('reportView'));
+        $reportView = Report::where('id', $id)->first();
+        return view('report.view-report', compact('reportView'));
     }
 
     /** update record */
@@ -102,7 +102,7 @@ class ReportController extends Controller
             'how'       => 'required|string',
         ], [
             'when.before_or_equal' => 'The date cannot exceed today.',
-        ]);        
+        ]);
         DB::beginTransaction();
         try {
             $updateRecord = [
@@ -115,46 +115,44 @@ class ReportController extends Controller
                 'how'        => $request->how,
                 'status'     => 'Open',
             ];
-            Report::where('id',$request->id)->update($updateRecord);
-            
-            Toastr::success('Has been update successfully :)','Success');
+            Report::where('id', $request->id)->update($updateRecord);
+
+            Toastr::success('Has been update successfully :)', 'Success');
             DB::commit();
             return redirect()->to(
                 route('report/list')
             );
-           
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('fail, update report  :)','Error');
+            Toastr::error('fail, update report  :)', 'Error');
             return redirect()->back();
         }
     }
 
-        /** update view record */
-        public function reportUpdateView(Request $request)
-        {
-            $request->validate([
-                'status'  => 'required|string',
-            ]);        
-            DB::beginTransaction();
-            try {
-                $updateRecord = [
-                    'status'   => $request->status,
-                ];
-                Report::where('id',$request->id)->update($updateRecord);
-                
-                Toastr::success('Has been update successfully :)','Success');
-                DB::commit();
-                return redirect()->to(
-                    route('report/list')
-                );
-               
-            } catch(\Exception $e) {
-                DB::rollback();
-                Toastr::error('fail, update report  :)','Error');
-                return redirect()->back();
-            }
+    /** update view record */
+    public function reportUpdateView(Request $request)
+    {
+        $request->validate([
+            'status'  => 'required|string',
+        ]);
+        DB::beginTransaction();
+        try {
+            $updateRecord = [
+                'status'   => $request->status,
+            ];
+            Report::where('id', $request->id)->update($updateRecord);
+
+            Toastr::success('Has been update successfully :)', 'Success');
+            DB::commit();
+            return redirect()->to(
+                route('report/list')
+            );
+        } catch (\Exception $e) {
+            DB::rollback();
+            Toastr::error('fail, update report  :)', 'Error');
+            return redirect()->back();
         }
+    }
 
     /** report delete */
     public function reportDelete(Request $request)
@@ -165,12 +163,12 @@ class ReportController extends Controller
                 Report::destroy($request->id);
                 //unlink(storage_path('app/public/report-photos/'.$request->avatar));
                 DB::commit();
-                Toastr::success('report deleted successfully :)','Success');
+                Toastr::success('report deleted successfully :)', 'Success');
                 return redirect()->back();
             }
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('report deleted fail :)','Error');
+            Toastr::error('report deleted fail :)', 'Error');
             return redirect()->back();
         }
     }
@@ -178,7 +176,26 @@ class ReportController extends Controller
     /** report profile page */
     public function reportProfile($id)
     {
-        $reportProfile = Report::where('id',$id)->first();
-        return view('report.report-profile',compact('reportProfile'));
+        $reportProfile = Report::where('id', $id)->first();
+        return view('report.report-profile', compact('reportProfile'));
+    }
+
+    /** report export pdf */
+    public function exportpdf($id)
+    {
+        $reportData = Report::where('id', $id)->first();
+            $data = [
+                'category' => $reportData->category,
+                'who' => $reportData->who,
+                'when' => $reportData->when,
+                'where' => $reportData->where,
+                'what' => $reportData->what,
+                'why' => $reportData->why,
+                'how' => $reportData->how,
+                'status' => $reportData->status,
+            ];
+        $pdf = PDF::loadView('pdf.export', $data);
+        $filename = 'Report_' . now()->format('dmY') . '.pdf';
+        return $pdf->download($filename);
     }
 }
