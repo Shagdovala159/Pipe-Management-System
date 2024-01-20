@@ -119,6 +119,15 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <!-- Display previously uploaded images -->
+                                <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <label>Previously Uploaded Images</label>
+                                        @foreach ($images as $image)
+                                        <img src="{{ asset('uploads/' . $image->path) }}" alt="Image" class="img-fluid" style="max-width: 200px; margin-right: 10px;">
+                                        @endforeach
+                                    </div>
+                                </div>
                                 <div class="col-12">
                                     <div class="form-group local-forms">
                                         <label>Status <span class="login-danger">*</span></label>

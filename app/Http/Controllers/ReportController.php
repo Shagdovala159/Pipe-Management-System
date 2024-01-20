@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 use App\Models\User;
 use PDF;
+use App\Models\Images;
+
 class ReportController extends Controller
 {
     /** index page report list */
@@ -46,10 +48,6 @@ class ReportController extends Controller
         ]);
         DB::beginTransaction();
         try {
-
-            // $upload_file = rand() . '.' . $request->upload->extension();
-            // $request->upload->move(storage_path('app/public/report-photos/'), $upload_file);
-            // if(!empty($request->upload)) {
             $report = new Report;
             $report->category   = $request->category;
             $report->reporter    = User::find(auth()->user()->id)->name;
@@ -61,6 +59,23 @@ class ReportController extends Controller
             $report->how        = $request->how;
             $report->status     = 'Open';
             $report->save();
+
+            if ($request->hasFile('images')) {
+                $images = $request->file('images');
+                $imagePaths = [];
+
+                foreach ($images as $image) {
+                    $imageName = time() . '_' . $image->getClientOriginalName();
+                    $image->move(public_path('uploads'), $imageName);
+                    $imagePaths[] = $imageName;
+
+                    // Associate image with the report
+                    Images::create([
+                        'report_id' => $report->id,
+                        'path' => $imageName,
+                    ]);
+                }
+            }
 
             Toastr::success('Has been add successfully :)', 'Success');
             DB::commit();
@@ -75,20 +90,24 @@ class ReportController extends Controller
         }
     }
 
-    /** view for edit report */
-    public function reportEdit($id)
-    {
-        $reportEdit = Report::where('id', $id)->first();
-        return view('report.edit-report', compact('reportEdit'));
-    }
+
 
     /** view for edit report */
     public function reportView($id)
     {
         $reportView = Report::where('id', $id)->first();
-        return view('report.view-report', compact('reportView'));
+        $images = Images::where('report_id', $id)->get();
+        return view('report.view-report', compact('reportView', 'images'));
     }
 
+    /** view for edit report */
+    public function reportEdit($id)
+    {
+        $reportEdit = Report::where('id', $id)->first();
+        $images = Images::where('report_id', $id)->get();
+
+        return view('report.edit-report', compact('reportEdit', 'images'));
+    }
     /** update record */
     public function reportUpdate(Request $request)
     {
@@ -103,7 +122,9 @@ class ReportController extends Controller
         ], [
             'when.before_or_equal' => 'The date cannot exceed today.',
         ]);
+
         DB::beginTransaction();
+
         try {
             $updateRecord = [
                 'category'   => $request->category,
@@ -115,19 +136,39 @@ class ReportController extends Controller
                 'how'        => $request->how,
                 'status'     => 'Open',
             ];
+
             Report::where('id', $request->id)->update($updateRecord);
+            // Check if new images are uploaded
+            if ($request->hasFile('images')) {
+                // Delete old images
+                Images::where('report_id', $request->id)->delete();
+
+                $images = $request->file('images');
+                $imagePaths = [];
+
+                foreach ($images as $image) {
+                    $imageName = time() . '_' . $image->getClientOriginalName();
+                    $image->move(public_path('uploads'), $imageName);
+                    $imagePaths[] = $imageName;
+
+                    // Associate image with the report
+                    Images::create([
+                        'report_id' => $request->id,
+                        'path' => $imageName,
+                    ]);
+                }
+            }
 
             Toastr::success('Has been update successfully :)', 'Success');
             DB::commit();
-            return redirect()->to(
-                route('report/list')
-            );
+            return redirect()->to(route('report/list'));
         } catch (\Exception $e) {
             DB::rollback();
-            Toastr::error('fail, update report  :)', 'Error');
+            Toastr::error('Fail, update report :)', 'Error');
             return redirect()->back();
         }
     }
+
 
     /** update view record */
     public function reportUpdateView(Request $request)
@@ -154,24 +195,40 @@ class ReportController extends Controller
         }
     }
 
-    /** report delete */
-    public function reportDelete(Request $request)
-    {
-        DB::beginTransaction();
-        try {
-            if (!empty($request->id)) {
-                Report::destroy($request->id);
-                //unlink(storage_path('app/public/report-photos/'.$request->avatar));
-                DB::commit();
-                Toastr::success('report deleted successfully :)', 'Success');
-                return redirect()->back();
+/** report delete */
+public function reportDelete(Request $request)
+{
+    DB::beginTransaction();
+    try {
+        if (!empty($request->id)) {
+            // Get the report
+            $report = Report::find($request->id);
+
+            // Delete associated images from the database
+            Images::where('report_id', $request->id)->delete();
+
+            // Delete associated images from the file system
+            foreach ($report->images as $image) {
+                $imagePath = public_path("uploads/{$image->filename}");
+                if (file_exists($imagePath)) {
+                    unlink($imagePath);
+                }
             }
-        } catch (\Exception $e) {
-            DB::rollback();
-            Toastr::error('report deleted fail :)', 'Error');
+
+            // Delete the report
+            Report::destroy($request->id);
+
+            DB::commit();
+            Toastr::success('Report deleted successfully :)', 'Success');
             return redirect()->back();
         }
+    } catch (\Exception $e) {
+        DB::rollback();
+        Toastr::error('Report deletion failed :(', 'Error');
+        return redirect()->back();
     }
+}
+
 
     /** report profile page */
     public function reportProfile($id)
@@ -184,16 +241,16 @@ class ReportController extends Controller
     public function exportpdf($id)
     {
         $reportData = Report::where('id', $id)->first();
-            $data = [
-                'category' => $reportData->category,
-                'who' => $reportData->who,
-                'when' => $reportData->when,
-                'where' => $reportData->where,
-                'what' => $reportData->what,
-                'why' => $reportData->why,
-                'how' => $reportData->how,
-                'status' => $reportData->status,
-            ];
+        $data = [
+            'category' => $reportData->category,
+            'who' => $reportData->who,
+            'when' => $reportData->when,
+            'where' => $reportData->where,
+            'what' => $reportData->what,
+            'why' => $reportData->why,
+            'how' => $reportData->how,
+            'status' => $reportData->status,
+        ];
         $pdf = PDF::loadView('pdf.export', $data);
         $filename = 'Report_' . now()->format('dmY') . '.pdf';
         return $pdf->download($filename);

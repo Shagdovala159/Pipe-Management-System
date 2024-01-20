@@ -79,7 +79,7 @@
                                 <tbody>
                                     @foreach ($reportList as $key=>$list )
                                     <tr>
-                                        <td>{{ $list->id }}</td>
+                                        <td class="id">{{ $list->id }}</td>
                                         <td>{{ $list->reporter }}</td>
                                         <td>{{ date('l, d-m-Y', strtotime($list->when)) }}</td>
                                         <td>{{ $list->where }}</td>
