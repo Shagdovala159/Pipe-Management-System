@@ -66,7 +66,7 @@
                                 <div class="col-12">
                                     <div class="form-group local-forms">
                                         <label>Area<span class="login-danger">*</span></label>
-                                        <select class="form-control select  @error('where') is-invalid @enderror" name="where"disabled>
+                                        <select class="form-control select  @error('where') is-invalid @enderror" name="where" disabled>
                                             <option selected disabled>Area</option>
                                             <option value="Batam" {{ $reportView->where == 'Batam' ? "selected" :"Batam"}}>Batam</option>
                                             <option value="Medan" {{ $reportView->where == 'Medan' ? "selected" :"Medan"}}>Medan</option>
@@ -85,7 +85,7 @@
                                 <div class="col-12">
                                     <div class="form-group local-forms">
                                         <label>Where<span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control @error('specific_where') is-invalid @enderror" name="specific_where" placeholder="Where..." value="{{ $reportView->specific_where }}"disabled>
+                                        <input type="text" class="form-control @error('specific_where') is-invalid @enderror" name="specific_where" placeholder="Where..." value="{{ $reportView->specific_where }}" disabled>
                                         @error('specific_where')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
@@ -150,7 +150,7 @@
                                 <div class="col-12">
                                     <div class="form-group local-forms">
                                         <label>Status <span class="login-danger">*</span></label>
-                                        <select class="form-control select  @error('status') is-invalid @enderror" name="status">
+                                        <select class="form-control select  @error('status') is-invalid @enderror" name="status" @if (Session::get('role_name')==='Tim Onsite' )disabled @endif>
                                             <option selected disabled>Status</option>
                                             <option value="Open" {{ $reportView->status == 'Open' ? "selected" :"Open"}}>Open</option>
                                             <option value="Approved" {{ $reportView->status == 'Approved' ? "selected" :"Approved"}}>Approved</option>
@@ -164,6 +164,7 @@
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="col-12 text-center">
                                     <div class="student-submit">
                                         <button type="submit" class="btn btn-primary">Update</button>

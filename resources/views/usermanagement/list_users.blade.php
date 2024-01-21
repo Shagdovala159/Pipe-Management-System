@@ -59,7 +59,6 @@
                                         <th>Email</th>
                                         <th>Phone Number</th>
                                         <th>Date Join</th>
-                                        <th>Position</th>
                                         <th>Status</th>
                                         <th class="text-end">Action</th>
                                     </tr>
@@ -153,11 +152,6 @@
                     data: 'join_date',
                     name: 'join_date'
                 },
-                {
-                    data: 'position',
-                    name: 'position'
-                },
-               
                 {
                     data: 'status',
                     name: 'status',

@@ -46,12 +46,6 @@
                                     </div>
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms">
-                                            <label>Date Of Birth <span class="login-danger">*</span></label>
-                                            <input type="text" class="form-control datetimepicker" name="date_of_birth" placeholder="DD-MM-YYYY" value="{{ $users->date_of_birth }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-4">
-                                        <div class="form-group local-forms">
                                             <label>Status <span class="login-danger">*</span></label>
                                             <select class="form-control select" name="status">
                                                 <option disabled>Select Status</option>
@@ -68,9 +62,8 @@
                                                 <option disabled>Select Role Name</option>
                                                 <option value="Admin" {{ $users->role_name == 'Admin' ? 'selected' : '' }}>Admin</option>
                                                 <option value="Super Admin" {{ $users->role_name == 'Super Admin' ? 'selected' : '' }}>Super Admin</option>
-                                                <option value="Normal User" {{ $users->role_name == 'Normal User' ? 'selected' : '' }}>Normal User</option>
-                                                <option value="Teachers" {{ $users->role_name == 'Teachers' ? 'selected' : '' }}>Teachers</option>
-                                                <option value="Student" {{ $users->role_name == 'Student' ? 'selected' : '' }}>Student</option>
+                                                <option value="Manager" {{ $users->role_name == 'Manager' ? 'selected' : '' }}>Manager</option>
+                                                <option value="Tim Onsite" {{ $users->role_name == 'Tim Onsite' ? 'selected' : '' }}>Tim Onsite</option>
                                             </select>
                                         </div>
                                     </div>
@@ -84,19 +77,6 @@
                                             </div>
                                         </div>
                                         <input type="hidden" name="hidden_avatar" value="{{ $users->avatar }}">
-                                    </div>
-
-                                    <div class="col-12 col-sm-4">
-                                        <div class="form-group local-forms">
-                                            <label>Position <span class="login-danger">*</span></label>
-                                            <input type="text" class="form-control" name="position" value="{{ $users->position }}">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-4">
-                                        <div class="form-group local-forms">
-                                            <label>Department <span class="login-danger">*</span></label>
-                                            <input type="text" class="form-control" name="department" value="{{ $users->department }}">
-                                        </div>
                                     </div>
                                     <div class="col-12 col-sm-4">
                                         <div class="form-group local-forms">

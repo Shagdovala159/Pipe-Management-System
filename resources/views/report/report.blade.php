@@ -98,18 +98,26 @@
                                         @endif
                                         <td>
                                             <div class="actions">
+                                                @if (Session::get('role_name') === 'Tim Onsite' || Session::get('role_name') === 'Super Admin')
+                                                @if( $list->status === 'Open' || $list->status === 'Revisied')
                                                 <a href="{{ url('report/edit/'.$list->id) }}" class="btn btn-sm bg-danger-light">
                                                     <i class="feather-edit"></i>
                                                 </a>
+                                                @endif
+                                                @endif
+                                                @if (Session::get('role_name') === 'Admin' || Session::get('role_name') === 'Super Admin')
                                                 <a class="btn btn-sm bg-danger-light report_delete" data-bs-toggle="modal" data-bs-target="#reportUser">
                                                     <i class="fas fa-trash-alt me-1"></i>
                                                 </a>
+                                                @endif
                                                 <a href="{{ url('report/view/'.$list->id) }}" class="btn btn-sm bg-danger-light">
                                                     <i class="fas fa-regular fa-eye"></i>
                                                 </a>
+                                                @if (Session::get('role_name') !== 'Tim Onsite')
                                                 <a href="{{ route('report.exportpdf', ['id' => $list->id]) }}" class="btn btn-sm bg-danger-light" target="_blank">
                                                     <i class="fas fa-solid fa-file-export"></i>
                                                 </a>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
