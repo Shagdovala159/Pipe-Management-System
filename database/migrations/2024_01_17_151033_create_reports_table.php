@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('category')->nullable();
             $table->string('when')->nullable();
             $table->string('where')->nullable();
+            $table->string('specific_where')->nullable();
             $table->string('who')->nullable();
             $table->string('what')->nullable();
             $table->string('why')->nullable();
