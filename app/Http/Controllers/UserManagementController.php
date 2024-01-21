@@ -42,10 +42,7 @@ class UserManagementController extends Controller
                 $name          = $request->name;
                 $email         = $request->email;
                 $role_name     = $request->role_name;
-                $position      = $request->position;
                 $phone         = $request->phone_number;
-                $date_of_birth = $request->date_of_birth;
-                $department    = $request->department;
                 $status        = $request->status;
 
                 $image_name = $request->hidden_avatar;
@@ -70,10 +67,7 @@ class UserManagementController extends Controller
                     'name'          => $name,
                     'role_name'     => $role_name,
                     'email'         => $email,
-                    'position'      => $position,
                     'phone_number'  => $phone,
-                    'date_of_birth' => $date_of_birth,
-                    'department'    => $department,
                     'status'        => $status,
                     'avatar'        => $image_name,
                 ];
@@ -84,7 +78,9 @@ class UserManagementController extends Controller
             }
             DB::commit();
             Toastr::success('User updated successfully :)','Success');
-            return redirect()->back();
+            return redirect()->to(
+                route('list/users')
+            );
 
         } catch(\Exception $e){
             DB::rollback();
@@ -160,7 +156,6 @@ class UserManagementController extends Controller
         $totalRecordsWithFilter = $users->where(function ($query) use ($searchValue) {
             $query->where('name', 'like', '%' . $searchValue . '%');
             $query->orWhere('email', 'like', '%' . $searchValue . '%');
-            $query->orWhere('position', 'like', '%' . $searchValue . '%');
             $query->orWhere('phone_number', 'like', '%' . $searchValue . '%');
             $query->orWhere('status', 'like', '%' . $searchValue . '%');
         })->count();
@@ -172,7 +167,6 @@ class UserManagementController extends Controller
             ->where(function ($query) use ($searchValue) {
                 $query->where('name', 'like', '%' . $searchValue . '%');
                 $query->orWhere('email', 'like', '%' . $searchValue . '%');
-                $query->orWhere('position', 'like', '%' . $searchValue . '%');
                 $query->orWhere('phone_number', 'like', '%' . $searchValue . '%');
                 $query->orWhere('status', 'like', '%' . $searchValue . '%');
             })
@@ -236,7 +230,6 @@ class UserManagementController extends Controller
                 "avatar"       => $avatar,
                 "name"         => $record->name,
                 "email"        => $record->email,
-                "position"     => $record->position,
                 "phone_number" => $record->phone_number,
                 "join_date"    => $record->join_date,
                 "status"       => $status, 
