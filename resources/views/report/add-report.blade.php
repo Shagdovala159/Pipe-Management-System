@@ -60,9 +60,28 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group local-forms">
-                                        <label>Where<span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control @error('where') is-invalid @enderror" name="where" placeholder="Where..." value="{{ old('where') }}">
+                                        <label>Area<span class="login-danger">*</span></label>
+                                        <select class="form-control select  @error('where') is-invalid @enderror" name="where">
+                                            <option selected disabled>Area</option>
+                                            <option value="Batam" {{ old('where') == 'Batam' ? "selected" :"Batam"}}>Batam</option>
+                                            <option value="Medan" {{ old('where') == 'Medan' ? "selected" :"Medan"}}>Medan</option>
+                                            <option value="Lampung" {{ old('where') == 'Lampung' ? "selected" :"Lampung"}}>Lampung</option>
+                                            <option value="Pekanbaru" {{ old('where') == 'Pekanbaru' ? "selected" :"Pekanbaru"}}>Pekanbaru</option>
+                                            <option value="Palembang" {{ old('where') == 'Palembang' ? "selected" :"Palembang"}}>Palembang</option>
+                                            <option value="Dumai" {{ old('where') == 'Dumai' ? "selected" :"Dumai"}}>Dumai</option>
+                                        </select>
                                         @error('where')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <label>Where<span class="login-danger">*</span></label>
+                                        <input type="text" class="form-control @error('specific_where') is-invalid @enderror" name="specific_where" placeholder="Where..." value="{{ old('specific_where') }}">
+                                        @error('specific_where')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -114,6 +133,18 @@
                                     </div>
                                 </div>
                                 <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <label>Images</label>
+                                        <input type="file" class="form-control @error('images.*') is-invalid @enderror" name="images[]" multiple>
+                                        @error('images.*')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                    <div class="row" id="image-preview"></div>
+                                </div>
+                                <div class="col-12">
                                     <div class="student-submit">
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                         <a href="/report/list" class="btn btn-secondary min-width: 160px">Cancel</a>
@@ -127,4 +158,63 @@
         </div>
     </div>
 </div>
+<!-- JavaScript for Image Preview -->
+<script>
+// Function to remove a preview image
+function removeImage(index) {
+    var preview = document.getElementById("image-preview");
+    preview.removeChild(preview.childNodes[index]);
+
+    var fileInput = document.querySelector("input[type=file]");
+    var files = Array.from(fileInput.files);
+    files.splice(index, 1);
+    
+    // Create a new FileList object
+    var newFileList = new DataTransfer();
+    files.forEach(function (file) {
+        newFileList.items.add(file);
+    });
+
+    // Assign the new FileList to the file input
+    fileInput.files = newFileList.files;
+}
+
+    // Function to preview images before upload
+    function previewImages() {
+        var preview = document.getElementById("image-preview");
+        var files = document.querySelector("input[type=file]").files;
+
+        preview.innerHTML = ""; // Clear previous preview
+
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
+
+            reader.onload = function(e) {
+                var imageContainer = document.createElement("div");
+                imageContainer.className = "col-3 mt-2";
+
+                var image = document.createElement("img");
+                image.className = "img-fluid";
+                image.src = e.target.result;
+
+                var closeButton = document.createElement("button");
+                closeButton.className = "btn btn-sm btn-danger mt-2";
+                closeButton.innerHTML = "X";
+                closeButton.onclick = function() {
+                    removeImage(Array.from(preview.childNodes).indexOf(imageContainer));
+                };
+
+                imageContainer.appendChild(image);
+                imageContainer.appendChild(closeButton);
+                preview.appendChild(imageContainer);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    // Attach the previewImages function to the file input change event
+    document.querySelector("input[type=file]").addEventListener("change", previewImages);
+</script>
 @endsection

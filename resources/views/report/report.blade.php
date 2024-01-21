@@ -79,7 +79,7 @@
                                 <tbody>
                                     @foreach ($reportList as $key=>$list )
                                     <tr>
-                                        <td>{{ $list->id }}</td>
+                                        <td class="id">{{ $list->id }}</td>
                                         <td>{{ $list->reporter }}</td>
                                         <td>{{ date('l, d-m-Y', strtotime($list->when)) }}</td>
                                         <td>{{ $list->where }}</td>
@@ -107,7 +107,7 @@
                                                 <a href="{{ url('report/view/'.$list->id) }}" class="btn btn-sm bg-danger-light">
                                                     <i class="fas fa-regular fa-eye"></i>
                                                 </a>
-                                                <a href="{{ route('report.exportpdf', ['id' => $list->id]) }}" class="btn btn-sm bg-danger-light">
+                                                <a href="{{ route('report.exportpdf', ['id' => $list->id]) }}" class="btn btn-sm bg-danger-light" target="_blank">
                                                     <i class="fas fa-solid fa-file-export"></i>
                                                 </a>
                                             </div>

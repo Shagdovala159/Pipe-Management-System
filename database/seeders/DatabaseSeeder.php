@@ -4,6 +4,9 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use \App\Models\User;
+use Hash;
+use Carbon\Carbon;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,5 +23,16 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $dt       = Carbon::now();
+        $todayDate = $dt->toDayDateTimeString();
+
+        User::create([
+            'name'      => 'Administrator',
+            'email'     => 'admin@admin.com',
+            'join_date' => $todayDate,
+            'role_name' => 'Super Admin',
+            'password'  => Hash::make('password'),
+        ]);
     }
 }
