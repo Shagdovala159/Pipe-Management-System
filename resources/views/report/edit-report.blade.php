@@ -65,9 +65,28 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group local-forms">
-                                        <label>Where<span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control @error('where') is-invalid @enderror" name="where" placeholder="Where..." value="{{ $reportEdit->where }} ">
+                                        <label>Area<span class="login-danger">*</span></label>
+                                        <select class="form-control select  @error('where') is-invalid @enderror" name="where">
+                                            <option selected disabled>Area</option>
+                                            <option value="Batam" {{ $reportEdit->where == 'Batam' ? "selected" :"Batam"}}>Batam</option>
+                                            <option value="Medan" {{ $reportEdit->where == 'Medan' ? "selected" :"Medan"}}>Medan</option>
+                                            <option value="Lampung" {{ $reportEdit->where == 'Lampung' ? "selected" :"Lampung"}}>Lampung</option>
+                                            <option value="Pekanbaru" {{ $reportEdit->where == 'Pekanbaru' ? "selected" :"Pekanbaru"}}>Pekanbaru</option>
+                                            <option value="Palembang" {{ $reportEdit->where == 'Palembang' ? "selected" :"Palembang"}}>Palembang</option>
+                                            <option value="Dumai" {{ $reportEdit->where == 'Dumai' ? "selected" :"Dumai"}}>Dumai</option>
+                                        </select>
                                         @error('where')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <label>Where<span class="login-danger">*</span></label>
+                                        <input type="text" class="form-control @error('specific_where') is-invalid @enderror" name="specific_where" placeholder="Where..." value="{{ $reportEdit->specific_where }} ">
+                                        @error('specific_where')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -85,7 +104,6 @@
                                         @enderror
                                     </div>
                                 </div>
-
                                 <div class="col-12">
                                     <div class="form-group local-forms">
                                         <label>What<span class="login-danger">*</span></label>
@@ -156,24 +174,24 @@
 </div>
 <!-- JavaScript for Image Preview -->
 <script>
-// Function to remove a preview image
-function removeImage(index) {
-    var preview = document.getElementById("image-preview");
-    preview.removeChild(preview.childNodes[index]);
+    // Function to remove a preview image
+    function removeImage(index) {
+        var preview = document.getElementById("image-preview");
+        preview.removeChild(preview.childNodes[index]);
 
-    var fileInput = document.querySelector("input[type=file]");
-    var files = Array.from(fileInput.files);
-    files.splice(index, 1);
-    
-    // Create a new FileList object
-    var newFileList = new DataTransfer();
-    files.forEach(function (file) {
-        newFileList.items.add(file);
-    });
+        var fileInput = document.querySelector("input[type=file]");
+        var files = Array.from(fileInput.files);
+        files.splice(index, 1);
 
-    // Assign the new FileList to the file input
-    fileInput.files = newFileList.files;
-}
+        // Create a new FileList object
+        var newFileList = new DataTransfer();
+        files.forEach(function(file) {
+            newFileList.items.add(file);
+        });
+
+        // Assign the new FileList to the file input
+        fileInput.files = newFileList.files;
+    }
 
     // Function to preview images before upload
     function previewImages() {

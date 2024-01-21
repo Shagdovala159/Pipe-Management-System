@@ -65,9 +65,28 @@
                                 </div>
                                 <div class="col-12">
                                     <div class="form-group local-forms">
-                                        <label>Where<span class="login-danger">*</span></label>
-                                        <input type="text" class="form-control @error('where') is-invalid @enderror" name="where" placeholder="Where..." value="{{ $reportView->where }} " disabled>
+                                        <label>Area<span class="login-danger">*</span></label>
+                                        <select class="form-control select  @error('where') is-invalid @enderror" name="where"disabled>
+                                            <option selected disabled>Area</option>
+                                            <option value="Batam" {{ $reportView->where == 'Batam' ? "selected" :"Batam"}}>Batam</option>
+                                            <option value="Medan" {{ $reportView->where == 'Medan' ? "selected" :"Medan"}}>Medan</option>
+                                            <option value="Lampung" {{ $reportView->where == 'Lampung' ? "selected" :"Lampung"}}>Lampung</option>
+                                            <option value="Pekanbaru" {{ $reportView->where == 'Pekanbaru' ? "selected" :"Pekanbaru"}}>Pekanbaru</option>
+                                            <option value="Palembang" {{ $reportView->where == 'Palembang' ? "selected" :"Palembang"}}>Palembang</option>
+                                            <option value="Dumai" {{ $reportView->where == 'Dumai' ? "selected" :"Dumai"}}>Dumai</option>
+                                        </select>
                                         @error('where')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group local-forms">
+                                        <label>Where<span class="login-danger">*</span></label>
+                                        <input type="text" class="form-control @error('specific_where') is-invalid @enderror" name="specific_where" placeholder="Where..." value="{{ $reportView->specific_where }}"disabled>
+                                        @error('specific_where')
                                         <span class="invalid-feedback" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>

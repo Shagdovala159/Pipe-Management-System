@@ -39,6 +39,7 @@ class ReportController extends Controller
             'category'  => 'required|string',
             'when'      => 'required|date|before_or_equal:today',
             'where'     => 'required|string',
+            'specific_where'  => 'required|string',
             'who'       => 'required|string',
             'what'      => 'required|string',
             'why'       => 'required|string',
@@ -53,6 +54,7 @@ class ReportController extends Controller
             $report->reporter    = User::find(auth()->user()->id)->name;
             $report->when       = $request->when;
             $report->where      = $request->where;
+            $report->specific_where = $request->specific_where;
             $report->who        = $request->who;
             $report->what       = $request->what;
             $report->why        = $request->why;
@@ -115,6 +117,7 @@ class ReportController extends Controller
             'category'  => 'required|string',
             'when'      => 'required|date|before_or_equal:today',
             'where'     => 'required|string',
+            'specific_where'  => 'required|string',
             'who'       => 'required|string',
             'what'      => 'required|string',
             'why'       => 'required|string',
@@ -130,6 +133,7 @@ class ReportController extends Controller
                 'category'   => $request->category,
                 'when'       => $request->when,
                 'where'      => $request->where,
+                'specific_where'  => $request->specific_where,
                 'who'        => $request->who,
                 'what'       => $request->what,
                 'why'        => $request->why,
@@ -195,39 +199,39 @@ class ReportController extends Controller
         }
     }
 
-/** report delete */
-public function reportDelete(Request $request)
-{
-    DB::beginTransaction();
-    try {
-        if (!empty($request->id)) {
-            // Get the report
-            $report = Report::find($request->id);
+    /** report delete */
+    public function reportDelete(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            if (!empty($request->id)) {
+                // Get the report
+                $report = Report::find($request->id);
 
-            // Delete associated images from the database
-            Images::where('report_id', $request->id)->delete();
+                // Delete associated images from the database
+                Images::where('report_id', $request->id)->delete();
 
-            // Delete associated images from the file system
-            foreach ($report->images as $image) {
-                $imagePath = public_path("uploads/{$image->filename}");
-                if (file_exists($imagePath)) {
-                    unlink($imagePath);
+                // Delete associated images from the file system
+                foreach ($report->images as $image) {
+                    $imagePath = public_path("uploads/{$image->filename}");
+                    if (file_exists($imagePath)) {
+                        unlink($imagePath);
+                    }
                 }
+
+                // Delete the report
+                Report::destroy($request->id);
+
+                DB::commit();
+                Toastr::success('Report deleted successfully :)', 'Success');
+                return redirect()->back();
             }
-
-            // Delete the report
-            Report::destroy($request->id);
-
-            DB::commit();
-            Toastr::success('Report deleted successfully :)', 'Success');
+        } catch (\Exception $e) {
+            DB::rollback();
+            Toastr::error('Report deletion failed :(', 'Error');
             return redirect()->back();
         }
-    } catch (\Exception $e) {
-        DB::rollback();
-        Toastr::error('Report deletion failed :(', 'Error');
-        return redirect()->back();
     }
-}
 
 
     /** report profile page */
@@ -246,13 +250,15 @@ public function reportDelete(Request $request)
             'who' => $reportData->who,
             'when' => $reportData->when,
             'where' => $reportData->where,
+            'specific_where'  => $reportData->specific_where,
             'what' => $reportData->what,
             'why' => $reportData->why,
             'how' => $reportData->how,
             'status' => $reportData->status,
         ];
-        $pdf = PDF::loadView('pdf.export', $data);
+        $pdf = PDF::loadView('pdf.export', $data)->setPaper('a4', 'landscape');
         $filename = 'Report_' . now()->format('dmY') . '.pdf';
-        return $pdf->download($filename);
+        //return $pdf->download($filename);
+        return $pdf->stream();
     }
 }

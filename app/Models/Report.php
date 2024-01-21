@@ -13,6 +13,7 @@ class Report extends Model
         'category',
         'when',
         'where',
+        'specific_where',
         'who',
         'what',
         'why',
